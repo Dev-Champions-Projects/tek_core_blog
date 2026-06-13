@@ -24,6 +24,15 @@ export default async function BlogPage({
 
   await updatePostViews(post.id);
   const comments = await getCommentsByPostId(post.id);
+  // Ensure comment timestamps are strings for client components
+  const serializedComments = comments.map((c: any) => ({
+    ...c,
+    createdAt: typeof c.createdAt === "string" ? c.createdAt : c.createdAt.toISOString(),
+    replies: c.replies.map((r: any) => ({
+      ...r,
+      createdAt: typeof r.createdAt === "string" ? r.createdAt : r.createdAt.toISOString(),
+    })),
+  }));
   const relatedPosts = await getRelatedPosts(post.id, post.categoryId, post.tags);
  
   return (
@@ -83,7 +92,7 @@ export default async function BlogPage({
               </p>
             </div>
           </div>
-          <CommentList postId={post.id} comments={comments} />
+          <CommentList postId={post.id} comments={serializedComments} />
         </section>
 
         {relatedPosts.length > 0 ? (

@@ -48,7 +48,7 @@ export function NavMenu({
       viewport={isMobile}
       className="mx-auto max-w-full my-5 z-50  bg-white shadow-md "
     >
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between ">
         {/* Left side */}
         <NavigationMenuList className="flex-wrap">
           <Link

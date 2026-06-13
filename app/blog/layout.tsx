@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NavMenu } from "@/components/navbar";
 import { authSession } from "@/lib/auth-utils";
 
