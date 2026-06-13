@@ -18,12 +18,12 @@ interface CommentProps {
   id: string;
   content: string;
   author: CommentAuthor;
-  createdAt: string;
+  createdAt: string | Date;
   replies: Array<{
     id: string;
     content: string;
     author: CommentAuthor;
-    createdAt: string;
+    createdAt: string | Date;
   }>;
 }
 
@@ -41,9 +41,10 @@ export default function CommentList({ postId, comments }: CommentListProps) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await authClient.getSession();
+        const raw = (await authClient.getSession()) as any;
         // better-auth returns { data: session } or { data: null }
-        setIsSignedIn(Boolean(response?.data?.user));
+        const session = raw?.data ?? null;
+        setIsSignedIn(Boolean(session));
       } catch (err) {
         setIsSignedIn(false);
       }
