@@ -92,7 +92,7 @@ export default async function BlogPage({
               </p>
             </div>
           </div>
-          <CommentList postId={post.id} comments={serializedComments} />
+          <CommentList postId={post.id} comments={serializedComments as any} />
         </section>
 
         {relatedPosts.length > 0 ? (
