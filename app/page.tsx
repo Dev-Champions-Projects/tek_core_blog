@@ -29,9 +29,7 @@ export default async function Home({
       </div>
       <Header />
       <div className="flex flex-col gap-6 justify-center">
-        {/* <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-4 gap-6 py-6"> */}
-        {/* <div className="container mx-auto p-4 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 py-6"> */}
-        <div className="container mx-auto p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {posts.map((post) => (
             <PostCard post={post} key={post.id} />
           ))}

@@ -17,7 +17,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Tek Blog",
-  description: "A blog for both developers and designers, sharing insights, tutorials, and stories from the tech world.",
+  description:
+    "A blog for both developers and designers, sharing insights, tutorials, and stories from the tech world.",
 };
 
 export default function RootLayout({
@@ -32,11 +33,8 @@ export default function RootLayout({
     >
       {/* <body className="w-full min-w-dvw"> */}
       <body className="w-full overflow-x-hidden">
-
         <NetworkStatusProvider>
-          <CategoriesProvider>
-            {children}
-          </CategoriesProvider>
+          <CategoriesProvider>{children}</CategoriesProvider>
         </NetworkStatusProvider>
         <Toaster position="bottom-right" richColors />
       </body>

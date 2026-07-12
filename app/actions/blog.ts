@@ -18,32 +18,60 @@ export const getPosts = async (page: number) => {
     : null;
 
   try {
-    const [posts, totalCount] = await prisma.$transaction([
-      prisma.post.findMany({
+    try {
+      const [posts, totalCount] = await prisma.$transaction([
+        prisma.post.findMany({
+          skip,
+          take: PAGE_SIZE,
+          orderBy: { updatedAt: "desc" },
+          include: {
+            user: {
+              select: { image: true, name: true, id: true, savedPosts: true },
+            },
+            category: true,
+          },
+        }),
+        prisma.post.count(),
+      ]);
+
+      return {
+        posts: posts.map((post) => ({
+          ...post,
+          savedPosts: currentUser?.savedPosts ?? [],
+        })),
+        totalPages: Math.ceil(totalCount / PAGE_SIZE),
+        currentPage: page,
+      };
+    } catch (txErr) {
+      // If transaction fails (some DB providers or connection issues), fallback to separate queries
+      console.warn("Transaction failed, falling back to separate queries", txErr);
+      const posts = await prisma.post.findMany({
         skip,
         take: PAGE_SIZE,
         orderBy: { updatedAt: "desc" },
         include: {
-          user: {
-            select: { image: true, name: true, id: true, savedPosts: true },
-          },
+          user: { select: { image: true, name: true, id: true, savedPosts: true } },
           category: true,
         },
-      }),
-      prisma.post.count(),
-    ]);
+      });
 
-    return {
-      posts: posts.map((post) => ({
-        ...post,
-        savedPosts: currentUser?.savedPosts ?? [],
-      })),
-      totalPages: Math.ceil(totalCount / PAGE_SIZE),
-      currentPage: page,
-    };
+      const totalCount = await prisma.post.count();
+
+      return {
+        posts: posts.map((post) => ({
+          ...post,
+          savedPosts: currentUser?.savedPosts ?? [],
+        })),
+        totalPages: Math.ceil(totalCount / PAGE_SIZE),
+        currentPage: page,
+      };
+    }
   } catch (err) {
-    console.error({ err });
-    throw new Error("Something went wrong");
+    console.error("getPosts error:", err);
+    // include original message for easier debugging in server logs
+    throw new Error(
+      `Something went wrong while fetching posts: ${err instanceof Error ? err.message : String(err)}`
+    );
   }
 };
 

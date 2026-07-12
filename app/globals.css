@@ -123,6 +123,36 @@
   }
 }
 
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #d4af37 transparent;
+}
+
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 9999px;
+}
+
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #f2c636 0%, #000 100%);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffd24b 0%, #111 100%);
+}
+
 .ProseMirror {
   @apply px-4 pt-2;
   outline: none !important;
@@ -170,7 +200,6 @@ h3.tiptap-heading + h2.tiptap-heading {
   margin: 1.5rem 0;
   padding-left: 1rem;
 }
-
 
 /* Marquee container */
 .animate-marquee {

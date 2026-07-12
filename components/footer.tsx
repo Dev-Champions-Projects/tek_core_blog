@@ -10,32 +10,43 @@ const Footer = () => {
   return (
     <footer className="bg-black text-white border-t border-white/10">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20">
-      {/* marquee / quick links */}
+        {/* marquee / quick links */}
         <div className="overflow-hidden whitespace-nowrap mb-8">
           <div className="animate-marquee inline-flex items-center gap-16 mt-16">
             <span className="marquee-item text-sm sm:text-base font-semibold px-4 text-white/90">
-              Explore Our Blog posts on: AI Innovations, Data Science & Analytics,
-              Digital Agency Success Stories, E-commerce & Online Business,
-              Events & Community Initiatives, Future of Technology, Software
-              Development, Team Talks & Behind-the-Scenes, Tech Tutorials & How-Tos,
-              UI/UX, Web Design, Web3... Stay ahead with{" "}
-              <Link href="https://dev-champions.tech" target="_blank" className="text-[#FDC700] underline">
+              Explore Our Blog posts on: AI Innovations, Data Science &
+              Analytics, Digital Agency Success Stories, E-commerce & Online
+              Business, Events & Community Initiatives, Future of Technology,
+              Software Development, Team Talks & Behind-the-Scenes, Tech
+              Tutorials & How-Tos, UI/UX, Web Design, Web3... Stay ahead with{" "}
+              <Link
+                href="https://dev-champions.tech"
+                target="_blank"
+                className="text-[#FDC700] underline"
+              >
                 Dev Champions IT
               </Link>
             </span>
-            <span aria-hidden="true" className="marquee-item text-sm sm:text-base font-semibold px-4 text-white/90">
-              Explore Our Blog posts on: AI Innovations, Data Science & Analytics,
-              Digital Agency Success Stories, E-commerce & Online Business,
-              Events & Community Initiatives, Future of Technology, Software
-              Development, Team Talks & Behind-the-Scenes, Tech Tutorials & How-Tos,
-              UI/UX, Web Design, Web3... Stay ahead with{" "}
-              <Link href="https://dev-champions.tech" target="_blank" className="text-[#FDC700] underline">
+            <span
+              aria-hidden="true"
+              className="marquee-item text-sm sm:text-base font-semibold px-4 text-white/90"
+            >
+              Explore Our Blog posts on: AI Innovations, Data Science &
+              Analytics, Digital Agency Success Stories, E-commerce & Online
+              Business, Events & Community Initiatives, Future of Technology,
+              Software Development, Team Talks & Behind-the-Scenes, Tech
+              Tutorials & How-Tos, UI/UX, Web Design, Web3... Stay ahead with{" "}
+              <Link
+                href="https://dev-champions.tech"
+                target="_blank"
+                className="text-[#FDC700] underline"
+              >
                 Dev Champions IT
               </Link>
             </span>
           </div>
         </div>
-      
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="space-y-6">

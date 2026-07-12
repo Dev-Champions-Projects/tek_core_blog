@@ -20,7 +20,6 @@ export default async function DashboardPage() {
       <div className="flex flex-wrap w-full flex-col gap-6 p-14 px-6">
         <Link
           href="/"
-          target="_blank"
           className="text-blue-600 font-medium gap-2 items-center flex"
         >
           <span>Visit public site</span>
