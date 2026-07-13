@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 
-
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -15,6 +14,15 @@ const nextConfig: NextConfig = {
       { hostname: "lh3.googleusercontent.com" },
       { hostname: "avatars.githubusercontent.com" },
     ],
+  },
+  async redirects() {
+    return [
+      {
+        source: "/:path*", // match everything
+        destination: "https://tek-core-blog.onrender.com/:path*", // redirect to Render URL
+        permanent: true, // true = 301 permanent redirect, false = 302 temporary
+      },
+    ];
   },
 };
 
