@@ -24,9 +24,32 @@ interface PostProps {
 export default function PostCard({ post, compact }: PostProps) {
   const excerpt = getPlainTextFromRichContent(post.content);
 
+  const handleArticleClick = () => {
+    if (typeof window !== "undefined") {
+      // Ensure dataLayer exists and has push signature
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      window.dataLayer = window.dataLayer || [];
+      // @ts-ignore
+      if (
+        Array.isArray(window.dataLayer) &&
+        typeof window.dataLayer.push === "function"
+      ) {
+        // @ts-ignore
+        window.dataLayer.push({
+          event: "select_content",
+          content_type: "article",
+          item_id: post.slug,
+          item_name: post.title,
+        });
+      }
+    }
+  };
+
   return (
     <Link
       href={`/blog/posts/${post.slug}`}
+      onClick={handleArticleClick}
       className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
       aria-label={`Read article: ${post.title}`}
     >
