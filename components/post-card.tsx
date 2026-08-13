@@ -9,6 +9,12 @@ import Link from "next/link";
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
+declare global {
+  interface Window {
+    dataLayer?: Array<Record<string, unknown>>;
+  }
+}
+
 interface PostProps {
   post: Post & { category: Category | null } & {
     user: {
@@ -26,16 +32,9 @@ export default function PostCard({ post, compact }: PostProps) {
 
   const handleArticleClick = () => {
     if (typeof window !== "undefined") {
-      // Ensure dataLayer exists and has push signature
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       window.dataLayer = window.dataLayer || [];
-      // @ts-ignore
-      if (
-        Array.isArray(window.dataLayer) &&
-        typeof window.dataLayer.push === "function"
-      ) {
-        // @ts-ignore
+
+      if (Array.isArray(window.dataLayer)) {
         window.dataLayer.push({
           event: "select_content",
           content_type: "article",
