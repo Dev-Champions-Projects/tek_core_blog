@@ -1,12 +1,38 @@
+import type { Metadata } from "next";
 import { getPosts } from "@/app/actions/blog";
 import Header from "@/components/header";
 import { NavMenu } from "@/components/navbar";
 import Pagination from "@/components/pagination";
 import PostCard from "@/components/post-card";
 import { authSession } from "@/lib/auth-utils";
+import { getSeoDescription, metadataBase, siteConfig } from "@/lib/seo";
 
 import { getCategories } from "@/app/actions/categories";
 import Footer from "@/components/footer";
+
+export const metadata: Metadata = {
+  metadataBase,
+  title: "AI, Tech, and Developer Insights",
+  description: getSeoDescription(
+    "Explore AI, software engineering, product stories, and developer insights from the Dev Champions community.",
+  ),
+  alternates: {
+    canonical: siteConfig.url,
+  },
+  openGraph: {
+    title: "Dev Champions | AI, Tech, and Developer Insights",
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dev Champions | AI, Tech, and Developer Insights",
+    description: siteConfig.description,
+  },
+};
+
 export default async function Home({
   searchParams,
 }: {
