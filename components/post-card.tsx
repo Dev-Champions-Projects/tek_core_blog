@@ -6,14 +6,9 @@ import { format } from "date-fns";
 import { MoveRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { trackEvent } from "@/lib/ga";
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-
-declare global {
-  interface Window {
-    dataLayer?: Array<Record<string, unknown>>;
-  }
-}
 
 interface PostProps {
   post: Post & { category: Category | null } & {
@@ -31,18 +26,11 @@ export default function PostCard({ post, compact }: PostProps) {
   const excerpt = getPlainTextFromRichContent(post.content);
 
   const handleArticleClick = () => {
-    if (typeof window !== "undefined") {
-      window.dataLayer = window.dataLayer || [];
-
-      if (Array.isArray(window.dataLayer)) {
-        window.dataLayer.push({
-          event: "select_content",
-          content_type: "article",
-          item_id: post.slug,
-          item_name: post.title,
-        });
-      }
-    }
+    trackEvent("select_content", {
+      content_type: "article",
+      item_id: post.slug,
+      item_name: post.title,
+    });
   };
 
   return (

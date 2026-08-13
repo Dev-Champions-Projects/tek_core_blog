@@ -1,6 +1,7 @@
 "use client";
 
 import { searchContent } from "@/app/actions/search";
+import { trackEvent } from "@/lib/ga";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -48,6 +49,11 @@ export default function GlobalSearchModal({
       setIsLoading(true);
 
       try {
+        trackEvent("search", {
+          search_term: query,
+          search_type: "site_search",
+        });
+
         const data = await searchContent(query);
         setResults(data?.results ?? []);
       } catch (err) {
@@ -121,6 +127,13 @@ export default function GlobalSearchModal({
                 {grouped.posts.map((post) => (
                   <Link
                     href={post.url}
+                    onClick={() =>
+                      trackEvent("select_content", {
+                        content_type: "search_result_post",
+                        item_id: post.id,
+                        item_name: post.title,
+                      })
+                    }
                     className="px-3 py-2 rounded-sm"
                     key={post.id}
                   >
@@ -142,6 +155,13 @@ export default function GlobalSearchModal({
                 {grouped.categories.map((category) => (
                   <Link
                     href={category.url}
+                    onClick={() =>
+                      trackEvent("select_content", {
+                        content_type: "search_result_category",
+                        item_id: category.id,
+                        item_name: category.name,
+                      })
+                    }
                     className="px-3 py-2 rounded-sm"
                     key={category.id}
                   >

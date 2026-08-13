@@ -3,6 +3,7 @@
 import { LayoutDashboard, LogOut, Search, Menu } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { trackEvent } from "@/lib/ga";
 
 import {
   NavigationMenu,
@@ -88,6 +89,13 @@ export function NavMenu({
                           <NavigationMenuLink asChild>
                             <Link
                               href={`/blog/category/${category.id}`}
+                              onClick={() =>
+                                trackEvent("select_content", {
+                                  content_type: "category",
+                                  item_id: category.id,
+                                  item_name: category.name,
+                                })
+                              }
                               className="block rounded-md px-2 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
                             >
                               {category.name}
@@ -146,7 +154,14 @@ export function NavMenu({
                                   <Link
                                     href={`/blog/category/${category.id}`}
                                     className="flex rounded-lg px-3 py-2 text-sm text-gray-700 transition transform-gpu hover:-translate-y-0.5 hover:shadow-sm hover:bg-white hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={() => {
+                                      trackEvent("select_content", {
+                                        content_type: "category",
+                                        item_id: category.id,
+                                        item_name: category.name,
+                                      });
+                                      setIsOpen(false);
+                                    }}
                                   >
                                     {category.name}
                                   </Link>
