@@ -18,6 +18,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
 
 import { Button } from "@/components/ui/button";
@@ -54,7 +55,7 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <Sidebar className="pt-12">
+    <Sidebar collapsible="offcanvas">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="mb-4 border-b border-app-border">
@@ -65,7 +66,8 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
-                const isActive = pathname === item.url || pathname?.startsWith(item.url + "/");
+                const isActive =
+                  pathname === item.url || pathname?.startsWith(item.url + "/");
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild isActive={isActive}>
@@ -80,22 +82,22 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        {/* Logout Button */}
-        <div className="mt-2">
-          <Button
-            variant="outline"
-            className="w-full text-red-600 hover:text-red-400 cursor-pointer flex items-center gap-2 justify-start"
-            onClick={async () => {
-              await authClient.signOut();
-              // window.location.href = "/sign-in";
-              router.push("/");
-            }}
-          >
-            <LogOut className="mr-2" />
-            Logout
-          </Button>
-        </div>
       </SidebarContent>
+      <SidebarFooter>
+        {/* Logout Button */}
+        <Button
+          variant="outline"
+          className="w-full text-red-600 hover:text-red-400 cursor-pointer flex items-center gap-2 justify-start"
+          onClick={async () => {
+            await authClient.signOut();
+            // window.location.href = "/sign-in";
+            router.push("/");
+          }}
+        >
+          <LogOut className="mr-2" />
+          Logout
+        </Button>
+      </SidebarFooter>
     </Sidebar>
   );
 }

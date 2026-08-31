@@ -13,7 +13,12 @@ export const getUniquePost = async (id: string) => {
       throw new Error("Unauthorized: User Id not found");
     }
 
-    const res = (await prisma.post.findUnique({ where: { id } })) as Post;
+    const res = (await prisma.post.findFirst({
+      where: {
+        id,
+        userId: session.user.id
+      }
+    })) as Post;
 
     return res;
   } catch (err) {
@@ -60,10 +65,12 @@ export const updatePost = async (params: PostFormValues) => {
     const data = { ...rest, tags: tags.map((tag) => tag.value) };
 
     const res = await prisma.post.update({
-      where: { id },
+      where: {
+        id,
+        userId: session.user.id,
+      },
       data: {
         ...data,
-        userId: session.user.id,
         status: data.status as PostStatus,
       },
     });
@@ -105,7 +112,10 @@ export const removePost = async (id: string) => {
     }
 
     const res = await prisma.post.delete({
-      where: { id },
+      where: {
+        id,
+        userId: session.user.id,
+      },
     });
 
     return res;

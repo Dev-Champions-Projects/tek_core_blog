@@ -13,6 +13,16 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import { useCategoriesContext } from "./categories-context";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { authClient } from "@/lib/auth-client";
@@ -66,7 +76,7 @@ export function NavMenu({
                 className="h-10 w-10 object-contain"
                 priority
               />
-              TEK CORE
+              <span className="hidden sm:inline">TEK CORE</span>
             </Link>
             {/*   <NavigationMenuItem>
             <NavigationMenuLink href="/">Home</NavigationMenuLink>
@@ -199,43 +209,59 @@ export function NavMenu({
 
             {isLoggedIn ? (
               <NavigationMenuItem>
-                <NavigationMenuTrigger>
-                  <Avatar className="h-9 w-9 rounded-full border overflow-hidden cursor-pointer bg-black">
-                    <AvatarImage src={userImage} className="object-cover" />
-                    <AvatarFallback className="h-9 w-9 bg-black text-white text-xs flex items-center justify-center rounded-full">
-                      {userName ? getNameInitials(userName) : "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="left-0 min-w-[180px] w-max max-w-[90vw] sm:absolute sm:left-0">
-                  <ul className="flex flex-col gap-0.5 p-2 bg-white shadow-md rounded-md">
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href="/dashboard"
-                          className="flex flex-row items-center px-2 py-4 mb-3 mt-3 rounded hover:bg-gray-100 hover:text-blue-600"
-                        >
-                          <LayoutDashboard className="h-4 w-4 mr-1" />
-                          <span className="text-sm">Dashboard</span>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <button
-                          onClick={async () => {
-                            await authClient.signOut();
-                            router.push("/sign-in");
-                          }}
-                          className="flex flex-row items-center px-2 py-1 w-full cursor-pointer text-left rounded hover:bg-gray-100 hover:text-red-600"
-                        >
-                          <LogOut className="h-4 w-4 mr-1" />
-                          <span className="text-sm">Sign out</span>
-                        </button>
-                      </NavigationMenuLink>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      aria-label="Open profile menu"
+                      className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                    >
+                      <Avatar className="h-9 w-9 overflow-hidden rounded-full border bg-black">
+                        <AvatarImage src={userImage} className="object-cover" />
+
+                        <AvatarFallback className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-xs text-white">
+                          {userName ? getNameInitials(userName) : "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                    </button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent
+                    align="end"
+                    sideOffset={8}
+                    className="w-52"
+                  >
+                    <DropdownMenuLabel className="truncate">
+                      {userName}
+                    </DropdownMenuLabel>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard">
+                        <LayoutDashboard />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem
+                      variant="destructive"
+                      onSelect={() => {
+                        void (async () => {
+                          await authClient.signOut();
+
+                          router.replace("/sign-in");
+                          router.refresh();
+                        })();
+                      }}
+                    >
+                      <LogOut />
+                      Sign out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </NavigationMenuItem>
             ) : (
               <NavigationMenuItem>

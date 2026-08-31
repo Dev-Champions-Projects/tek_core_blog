@@ -13,11 +13,11 @@ export default function DashboardCard({
   totalViews,
 }: CardProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full px-6">
+    <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
       <Card className="shadow-lg min-h-36 flex items-center flex-col justify-center">
         <CardHeader className="flex flex-col w-full">
           <div className="w-full flex justify-between">
-            <CardDescription className="text-lg font-medium">
+            <CardDescription className="text-sm font-medium sm:text-base">
               Total number of categories
             </CardDescription>
             <Combine />
@@ -29,7 +29,7 @@ export default function DashboardCard({
       <Card className="shadow-lg min-h-36 flex items-center flex-col justify-center">
         <CardHeader className="flex flex-col w-full">
           <div className="w-full flex justify-between">
-            <CardDescription className="text-lg font-medium">
+            <CardDescription className="text-sm font-medium sm:text-base">
               Total number of posts
             </CardDescription>
             <Combine />
@@ -41,7 +41,7 @@ export default function DashboardCard({
       <Card className="shadow-lg min-h-36 flex items-center flex-col justify-center">
         <CardHeader className="flex flex-col w-full">
           <div className="w-full flex justify-between">
-            <CardDescription className="text-lg font-medium">
+            <CardDescription className="text-sm font-medium sm:text-base">
               Total number of views
             </CardDescription>
             <Combine />

@@ -25,7 +25,12 @@ export const getCategoriesWithUser = async () => {
     }
 
     const res = await prisma.category.findMany({
-      orderBy: { createdAt: "desc" },
+      where: {
+        userId: session.user.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
       include: {
         user: true,
       },
@@ -51,7 +56,7 @@ export const createCategory = async (name: string) => {
         name,
         userId: session.user.id,
       },
-    });
+    })
 
     return res;
   } catch (err) {
@@ -69,9 +74,14 @@ export const updateCategory = async (category: CategoryProps) => {
     }
 
     const res = await prisma.category.update({
-      where: { id: category.id },
-      data: { name: category.name },
-    });
+      where: {
+        id: category.id,
+        userId: session.user.id,
+      },
+      data: {
+        name: category.name,
+      },
+    })
 
     return res;
   } catch (err) {
@@ -88,7 +98,12 @@ export const removeCategory = async (id: string) => {
       throw new Error("Unauthorized: User Id not found");
     }
 
-    const res = await prisma.category.delete({ where: { id } });
+    const res = await prisma.category.delete({
+      where: {
+        id,
+        userId: session.user.id,
+      },
+    })
 
     return res;
   } catch (err) {
