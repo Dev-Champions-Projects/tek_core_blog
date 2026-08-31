@@ -1,5 +1,4 @@
 import { Toaster } from "@/components/ui/sonner";
-import { CategoriesProvider } from "@/components/categories-context";
 import { NetworkStatusProvider } from "@/components/network-status-provider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -122,7 +121,7 @@ export default function RootLayout({
           })}
         </Script>
         <NetworkStatusProvider>
-          <CategoriesProvider>{children}</CategoriesProvider>
+          <NetworkStatusProvider>{children}</NetworkStatusProvider>
         </NetworkStatusProvider>
         <Toaster position="bottom-right" richColors />
       </body>
