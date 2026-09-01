@@ -106,7 +106,7 @@ export function NavMenu({
                   overflow-y-scroll
      max-h-[45vh] md:max-h-[340px] lg:max-h-[380px] w-[200px] h-[60vh] rounded-md"
                 >
-                  <ul className=" grid gap-4 p-4 bg-white shadow-md rounded-md relative z-50">
+                  <ul className=" grid gap-4 p-4 cursor-pointer bg-white shadow-md rounded-md relative z-50">
                     {!loading &&
                       sortedCategories?.map((category) => (
                         <li key={category.id}>
