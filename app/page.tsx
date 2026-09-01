@@ -8,6 +8,8 @@ import { authSession } from "@/lib/auth-utils";
 import { getSeoDescription, metadataBase, siteConfig } from "@/lib/seo";
 import { CategoriesProvider } from "@/components/categories-context";
 
+import { getCategories } from "@/app/actions/categories";
+
 import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
@@ -40,11 +42,13 @@ export default async function Home({
 }) {
   const params = await searchParams;
   const page = Number(params.page) || 1;
-  const { posts, totalPages, currentPage } = await getPosts(page);
-  const session = await authSession();
+  // const { posts, totalPages, currentPage } = await getPosts(page);
+  // const session = await authSession();
+  const [{ posts, totalPages, currentPage }, session, categories] =
+    await Promise.all([getPosts(page), authSession(), getCategories()]);
 
   return (
-    <CategoriesProvider>
+    <CategoriesProvider initialCategories={categories}>
       <>
         <div className="relative w-full">
           <NavMenu

@@ -222,3 +222,45 @@ h3.tiptap-heading + h2.tiptap-heading {
     transform: translateX(-50%);
   }
 }
+
+/* Category dropdown scrollbar */
+.category-scrollbar {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #d4a017 transparent;
+}
+
+/* Chrome, Edge, Safari */
+.category-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.category-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.category-scrollbar::-webkit-scrollbar-thumb {
+  background: #d4a017;
+  border-radius: 999px;
+}
+
+.category-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #b88912;
+}
+
+/* Shimmer animation for loading skeletons */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}

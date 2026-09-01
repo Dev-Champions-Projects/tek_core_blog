@@ -96,3 +96,16 @@ export const removeCategory = async (id: string) => {
     throw new Error("Something went wrong");
   }
 };
+
+export const getCategoryById = async (id: string) => {
+  try {
+    const category = await prisma.category.findUnique({
+      where: { id },
+    });
+
+    return category;
+  } catch (err) {
+    console.error({ err });
+    throw new Error("Something went wrong");
+  }
+};

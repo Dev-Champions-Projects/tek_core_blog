@@ -1,54 +1,53 @@
-import { Combine } from "lucide-react";
-import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
+"use client";
 
-interface CardProps {
-  totalCategories: number;
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+
+interface DashboardCardProps {
   totalPosts: number;
+  totalCategories: number;
   totalViews: number;
 }
 
 export default function DashboardCard({
-  totalCategories,
   totalPosts,
+  totalCategories,
   totalViews,
-}: CardProps) {
+}: DashboardCardProps) {
+  const stats = [
+    {
+      title: "Total Posts",
+      value: totalPosts,
+      description: "Published posts",
+    },
+    {
+      title: "Total Categories",
+      value: totalCategories,
+      description: "Active categories",
+    },
+    {
+      title: "Total Views",
+      value: totalViews,
+      description: "Page views",
+    },
+  ];
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full px-6">
-      <Card className="shadow-lg min-h-36 flex items-center flex-col justify-center">
-        <CardHeader className="flex flex-col w-full">
-          <div className="w-full flex justify-between">
-            <CardDescription className="text-lg font-medium">
-              Total number of categories
-            </CardDescription>
-            <Combine />
-          </div>
-          <CardTitle className="text-2xl">{totalCategories} </CardTitle>
-        </CardHeader>
-      </Card>
-
-      <Card className="shadow-lg min-h-36 flex items-center flex-col justify-center">
-        <CardHeader className="flex flex-col w-full">
-          <div className="w-full flex justify-between">
-            <CardDescription className="text-lg font-medium">
-              Total number of posts
-            </CardDescription>
-            <Combine />
-          </div>
-          <CardTitle className="text-2xl">{totalPosts} </CardTitle>
-        </CardHeader>
-      </Card>
-
-      <Card className="shadow-lg min-h-36 flex items-center flex-col justify-center">
-        <CardHeader className="flex flex-col w-full">
-          <div className="w-full flex justify-between">
-            <CardDescription className="text-lg font-medium">
-              Total number of views
-            </CardDescription>
-            <Combine />
-          </div>
-          <CardTitle className="text-2xl">{totalViews} </CardTitle>
-        </CardHeader>
-      </Card>
+    <div className="grid gap-4 sm:grid-cols-3">
+      {stats.map((stat) => (
+        <Card key={stat.title} className="h-full">
+          <CardHeader>
+            <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-2">
+              <p className="text-3xl font-bold">{stat.value}</p>
+              <p className="text-xs text-muted-foreground">
+                {stat.description}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }

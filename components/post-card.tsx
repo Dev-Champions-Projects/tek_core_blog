@@ -1,29 +1,41 @@
 "use client";
 
 import { Category, Post } from "@/lib/generated/prisma/client";
+
 import { getPlainTextFromRichContent } from "@/lib/utils";
+
 import { format } from "date-fns";
 import { MoveRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
 import { trackEvent } from "@/lib/ga";
+
+import SavePostButton from "@/components/save-post-button";
+
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 interface PostProps {
-  post: Post & { category: Category | null } & {
+  post: Post & {
+    category: Category | null;
+
+    savedPosts?: string[];
+
     user: {
       name: string;
       id: string;
       image: string | null;
-      savedPosts: string[];
     };
   };
+
   compact?: boolean;
 }
 
 export default function PostCard({ post, compact }: PostProps) {
   const excerpt = getPlainTextFromRichContent(post.content);
+
+  const isSaved = post.savedPosts?.includes(post.id) ?? false;
 
   const handleArticleClick = () => {
     trackEvent("select_content", {
@@ -34,32 +46,118 @@ export default function PostCard({ post, compact }: PostProps) {
   };
 
   return (
-    <Link
-      href={`/blog/posts/${post.slug}`}
-      onClick={handleArticleClick}
-      className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
-      aria-label={`Read article: ${post.title}`}
+    <Card
+      className="
+        group
+        relative
+        h-full
+        overflow-hidden
+        border
+        border-slate-200/80
+        bg-white/95
+        p-0
+        pb-3
+        shadow-sm
+        transition-all
+        duration-300
+        ease-out
+        hover:-translate-y-1
+        hover:border-sky-300
+        hover:shadow-xl
+        dark:border-slate-800
+        dark:bg-slate-900/90
+        dark:hover:border-sky-500/70
+      "
     >
-      <Card className="relative h-full overflow-hidden border border-slate-200/80 bg-white/95 p-0 pb-3 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:border-sky-300 hover:shadow-xl dark:border-slate-800 dark:bg-slate-900/90 dark:hover:border-sky-500/70">
+      {/* Save button */}
+      <div className="absolute right-3 top-3 z-20">
+        <SavePostButton postId={post.id} initialSaved={isSaved} />
+      </div>
+
+      {/* Clickable post area */}
+      <Link
+        href={`/blog/posts/${post.slug}`}
+        onClick={handleArticleClick}
+        className="
+          block
+          h-full
+          focus:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-sky-500
+          focus-visible:ring-offset-2
+        "
+        aria-label={`Read article: ${post.title}`}
+      >
         <div
-          className={`relative overflow-hidden ${compact ? "h-24 sm:h-28 md:h-32" : "h-32 sm:h-40 md:h-48"}`}
+          className={`relative overflow-hidden ${
+            compact ? "h-24 sm:h-28 md:h-32" : "h-32 sm:h-40 md:h-48"
+          }`}
         >
           {post.imageUrl ? (
             <Image
               src={post.imageUrl}
               alt={post.title}
               fill
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+              className="
+                object-cover
+                transition-transform
+                duration-500
+                ease-out
+                group-hover:scale-105
+              "
               sizes="100vw"
             />
           ) : (
-            <div className="flex h-full items-center justify-center bg-gradient-to-br from-sky-100 via-indigo-50 to-violet-100 text-sm font-semibold text-slate-600 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950 dark:text-slate-200">
+            <div
+              className="
+                flex
+                h-full
+                items-center
+                justify-center
+                bg-gradient-to-br
+                from-sky-100
+                via-indigo-50
+                to-violet-100
+                text-sm
+                font-semibold
+                text-slate-600
+                dark:from-slate-800
+                dark:via-slate-900
+                dark:to-slate-950
+                dark:text-slate-200
+              "
+            >
               Tech Story
             </div>
           )}
 
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/10 to-transparent opacity-80" />
-          <div className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold text-slate-900 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 translate-y-1 dark:bg-slate-900/80 dark:text-slate-100">
+
+          <div
+            className="
+              absolute
+              bottom-3
+              left-3
+              inline-flex
+              translate-y-1
+              items-center
+              gap-1
+              rounded-full
+              bg-white/90
+              px-2.5
+              py-1
+              text-[10px]
+              font-semibold
+              text-slate-900
+              opacity-0
+              transition-all
+              duration-300
+              group-hover:translate-y-0
+              group-hover:opacity-100
+              dark:bg-slate-900/80
+              dark:text-slate-100
+            "
+          >
             Read article
             <MoveRight size={12} />
           </div>
@@ -92,7 +190,23 @@ export default function PostCard({ post, compact }: PostProps) {
                 <Badge
                   key={tag}
                   variant="secondary"
-                  className="rounded-full border border-slate-200 bg-slate-100 text-[10px] font-medium text-slate-700 transition-colors duration-200 group-hover:border-sky-200 group-hover:bg-sky-50 group-hover:text-sky-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:group-hover:border-sky-500/70 dark:group-hover:bg-sky-500/10 dark:group-hover:text-sky-300"
+                  className="
+                      rounded-full
+                      border
+                      border-slate-200
+                      bg-slate-100
+                      text-[10px]
+                      font-medium
+                      text-slate-700
+                      transition-colors
+                      duration-200
+                      group-hover:border-sky-200
+                      group-hover:bg-sky-50
+                      group-hover:text-sky-700
+                      dark:border-slate-700
+                      dark:bg-slate-800
+                      dark:text-slate-200
+                    "
                 >
                   #{tag}
                 </Badge>
@@ -103,7 +217,9 @@ export default function PostCard({ post, compact }: PostProps) {
           <div className="mt-4 flex items-center justify-between gap-3 border-t border-slate-200/80 pt-3 dark:border-slate-700/80">
             <div className="flex min-w-0 items-center gap-2">
               <div
-                className={`relative overflow-hidden rounded-full ${compact ? "h-6 w-6" : "h-8 w-8"}`}
+                className={`relative overflow-hidden rounded-full ${
+                  compact ? "h-6 w-6" : "h-8 w-8"
+                }`}
               >
                 <Image
                   src={post.user.image || "/default-avatar.png"}
@@ -117,6 +233,7 @@ export default function PostCard({ post, compact }: PostProps) {
                 <p className="truncate text-[11px] font-semibold text-slate-700 dark:text-slate-200">
                   {post.user.name}
                 </p>
+
                 {!compact && (
                   <p className="text-[10px] text-slate-500 dark:text-slate-400">
                     {format(post.createdAt, "dd MMM yyyy")}
@@ -131,7 +248,7 @@ export default function PostCard({ post, compact }: PostProps) {
             </span>
           </div>
         </CardContent>
-      </Card>
-    </Link>
+      </Link>
+    </Card>
   );
 }

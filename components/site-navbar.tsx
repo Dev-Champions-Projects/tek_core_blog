@@ -1,15 +1,10 @@
-export const dynamic = "force-dynamic";
 import { getCategories } from "@/app/actions/categories";
-
-import { NavMenu } from "@/components/navbar";
 import { authSession } from "@/lib/auth-utils";
-import { CategoriesProvider } from "@/components/categories-context";
 
-export default async function BlogLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import { CategoriesProvider } from "@/components/categories-context";
+import { NavMenu } from "@/components/navbar";
+
+export async function SiteNavbar() {
   const [session, categories] = await Promise.all([
     authSession(),
     getCategories(),
@@ -17,14 +12,10 @@ export default async function BlogLayout({
 
   return (
     <CategoriesProvider initialCategories={categories}>
-      <div className="relative w-full">
-        <NavMenu
-          userName={session?.user.name}
-          userImage={session?.user.image as string}
-        />
-
-        {children}
-      </div>
+      <NavMenu
+        userName={session?.user.name}
+        userImage={session?.user.image ?? undefined}
+      />
     </CategoriesProvider>
   );
 }

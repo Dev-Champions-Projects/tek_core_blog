@@ -20,6 +20,8 @@ import {
   siteConfig,
 } from "@/lib/seo";
 import { getPlainTextFromRichContent } from "@/lib/utils";
+import { getSavedPostIds } from "@/app/actions/saved-posts";
+import SavePostButton from "@/components/save-post-button";
 
 // Render this page dynamically so comments and replies are always fresh
 export const dynamic = "force-dynamic";
@@ -79,9 +81,14 @@ export default async function BlogPage({
 }) {
   const { slug } = await params;
 
-  const post = await getBlogPostBySlug(slug);
+  const [post, savedPostIds] = await Promise.all([
+    getBlogPostBySlug(slug),
+    getSavedPostIds(),
+  ]);
 
   if (!post) return null;
+
+  const isSaved = savedPostIds.includes(post.id);
 
   await updatePostViews(post.id);
   const comments = await getCommentsByPostId(post.id);
@@ -156,12 +163,28 @@ export default async function BlogPage({
               </span>
             </div>
           </div>
-          <Link
-            href={`/blog/category/${post.categoryId}`}
-            className="ml-auto rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-800 hover:bg-slate-200"
-          >
-            {post.category?.name}
-          </Link>
+          <div className="ml-auto flex items-center gap-2">
+            <SavePostButton postId={post.id} initialSaved={isSaved} />
+
+            {post.categoryId && (
+              <Link
+                href={`/blog/category/${post.categoryId}`}
+                className="
+        rounded-full
+        bg-slate-100
+        px-3
+        py-1
+        text-sm
+        font-semibold
+        text-slate-800
+        transition-colors
+        hover:bg-slate-200
+      "
+              >
+                {post.category?.name}
+              </Link>
+            )}
+          </div>
         </div>
 
         <div className="relative h-80 w-full overflow-hidden rounded-xl shadow-lg">
@@ -212,7 +235,10 @@ export default async function BlogPage({
               {relatedPosts.map((relatedPost) => (
                 <PostCard
                   key={relatedPost.id}
-                  post={relatedPost}
+                  post={{
+                    ...relatedPost,
+                    savedPosts: savedPostIds,
+                  }}
                   compact={true}
                 />
               ))}
