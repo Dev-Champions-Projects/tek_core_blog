@@ -1,6 +1,21 @@
 "use client";
 
-import { LayoutDashboard, LogOut, Search, Menu } from "lucide-react";
+import {
+  LayoutDashboard,
+  LogOut,
+  Search,
+  Menu,
+  ChevronDown,
+  Bookmark,
+} from "lucide-react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import Link from "next/link";
 import Image from "next/image";
 import { trackEvent } from "@/lib/ga";
@@ -40,6 +55,11 @@ export function NavMenu({
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
   const { categories, loading } = useCategoriesContext();
+  const sortedCategories = [...(categories ?? [])].sort((a, b) =>
+    a.name.localeCompare(b.name, undefined, {
+      sensitivity: "base",
+    }),
+  );
 
   const isLoggedIn = Boolean(userName);
 
@@ -53,19 +73,19 @@ export function NavMenu({
       >
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-3 sm:px-4 md:px-0">
           {/* Left side */}
-          <NavigationMenuList className="flex-wrap">
+          <NavigationMenuList className="flex shrink-0 flex-nowrap items-center">
             <Link
               href="/"
               className="flex items-center gap-2 text-lg font-bold tracking-tight text-gray-900 hover:opacity-80 transition-opacity"
             >
-              <Image
+              {/*  <Image
                 src="/logo_white.png"
                 alt="Tek Core Logo"
                 width={40}
                 height={40}
                 className="h-10 w-10 object-contain"
                 priority
-              />
+              /> */}
               TEK CORE
             </Link>
             {/*   <NavigationMenuItem>
@@ -81,10 +101,14 @@ export function NavMenu({
             <NavigationMenuItem>
               <NavigationMenuTrigger>All Categories</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ScrollArea className="w-[200px] h-[60vh] rounded-md">
-                  <ul className="grid gap-4 p-4 bg-white shadow-md rounded-md relative z-50">
+                <ScrollArea
+                  className="category-scrollbar cursor-pointer
+                  overflow-y-scroll
+     max-h-[45vh] md:max-h-[340px] lg:max-h-[380px] w-[200px] h-[60vh] rounded-md"
+                >
+                  <ul className=" grid gap-4 p-4 bg-white shadow-md rounded-md relative z-50">
                     {!loading &&
-                      categories?.map((category) => (
+                      sortedCategories?.map((category) => (
                         <li key={category.id}>
                           <NavigationMenuLink asChild>
                             <Link
@@ -149,7 +173,7 @@ export function NavMenu({
                           </div>
                           <ul className="flex max-h-[40vh] flex-col gap-1.5 overflow-y-auto pr-1">
                             {!loading &&
-                              categories?.map((category) => (
+                              sortedCategories?.map((category) => (
                                 <li key={category.id}>
                                   <Link
                                     href={`/blog/category/${category.id}`}
@@ -188,54 +212,144 @@ export function NavMenu({
           {/* Right side */}
           <NavigationMenuList className="flex-wrap">
             <NavigationMenuItem className=" md:block">
-              <div
-                className="mr-6 cursor-pointer"
+              <button
+                type="button"
+                aria-label="Search"
+                className="
+    mr-2 flex h-10 w-10
+    shrink-0 items-center justify-center
+    rounded-full
+    text-gray-700
+    transition-colors
+    hover:bg-gray-100
+    sm:mr-4
+  "
                 onClick={() => setIsOpen(true)}
               >
-                <Search />
-              </div>
+                <Search className="h-6 w-6" />
+              </button>
               <GlobalSearchModal isOpen={isOpen} setIsOpen={setIsOpen} />
             </NavigationMenuItem>
 
             {isLoggedIn ? (
               <NavigationMenuItem>
-                <NavigationMenuTrigger>
-                  <Avatar className="h-9 w-9 rounded-full border overflow-hidden cursor-pointer bg-black">
-                    <AvatarImage src={userImage} className="object-cover" />
-                    <AvatarFallback className="h-9 w-9 bg-black text-white text-xs flex items-center justify-center rounded-full">
-                      {userName ? getNameInitials(userName) : "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="left-0 min-w-[180px] w-max max-w-[90vw] sm:absolute sm:left-0">
-                  <ul className="flex flex-col gap-0.5 p-2 bg-white shadow-md rounded-md">
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href="/dashboard"
-                          className="flex flex-row items-center px-2 py-4 mb-3 mt-3 rounded hover:bg-gray-100 hover:text-blue-600"
-                        >
-                          <LayoutDashboard className="h-4 w-4 mr-1" />
-                          <span className="text-sm">Dashboard</span>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <button
-                          onClick={async () => {
-                            await authClient.signOut();
-                            router.push("/sign-in");
-                          }}
-                          className="flex flex-row items-center px-2 py-1 w-full cursor-pointer text-left rounded hover:bg-gray-100 hover:text-red-600"
-                        >
-                          <LogOut className="h-4 w-4 mr-1" />
-                          <span className="text-sm">Sign out</span>
-                        </button>
-                      </NavigationMenuLink>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      aria-label="Open profile menu"
+                      className="
+            flex h-11 items-center gap-2
+            rounded-xl bg-gray-100
+            px-2 py-1
+            outline-none
+            transition-colors
+            hover:bg-gray-200
+            focus-visible:ring-2
+            focus-visible:ring-black/20 cursor-pointer
+          "
+                    >
+                      <Avatar className="flex h-9 w-9 shrink-0 overflow-hidden rounded-full border bg-black">
+                        <AvatarImage
+                          src={userImage}
+                          className="h-full w-full object-cover"
+                        />
+
+                        <AvatarFallback className="flex h-full w-full items-center justify-center rounded-full bg-black text-xs text-white">
+                          {userName ? getNameInitials(userName) : "U"}
+                        </AvatarFallback>
+                      </Avatar>
+
+                      <ChevronDown className="h-4 w-4 shrink-0 text-gray-600" />
+                    </button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent
+                    align="end"
+                    side="bottom"
+                    sideOffset={8}
+                    collisionPadding={12}
+                    className="
+          z-[100]
+          w-52
+          max-w-[calc(100vw-24px)]
+          rounded-xl
+          border
+          bg-white
+          p-2
+          shadow-lg
+        "
+                  >
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/dashboard"
+                        className="
+              flex w-full cursor-pointer
+              flex-row items-center gap-3
+              rounded-lg px-3 py-3
+              text-sm text-gray-800
+              outline-none
+              hover:bg-gray-100
+              focus:bg-gray-100
+            "
+                      >
+                        <LayoutDashboard className="h-5 w-5 shrink-0" />
+
+                        <span>Dashboard</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/saved-posts"
+                        className="
+      flex
+      w-full
+      cursor-pointer
+      flex-row
+      items-center
+      gap-3
+      rounded-lg
+      px-3
+      py-3
+      text-sm
+      text-gray-800
+      outline-none
+      hover:bg-gray-100
+      focus:bg-gray-100
+    "
+                      >
+                        <Bookmark className="h-5 w-5 shrink-0" />
+
+                        <span>Saved Posts</span>
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem asChild>
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          await authClient.signOut();
+                          router.replace("/sign-in");
+                        }}
+                        className="
+              flex w-full cursor-pointer
+              flex-row items-center gap-3
+              rounded-lg px-3 py-3
+              text-left text-sm text-gray-800
+              outline-none
+              hover:bg-gray-100
+              hover:text-red-600
+              focus:bg-gray-100
+              focus:text-red-600
+            "
+                      >
+                        <LogOut className="h-5 w-5 shrink-0" />
+
+                        <span>Sign out</span>
+                      </button>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </NavigationMenuItem>
             ) : (
               <NavigationMenuItem>
